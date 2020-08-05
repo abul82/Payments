@@ -107,10 +107,27 @@ mAuthVerificationId = s;
     public void signinCompleted(Task<AuthResult> task) {
 if (task.isSuccessful()){
     String uid = task.getResult().getUser().getUid();
-    database.getReference("/Users").child(uid).setValue(true);
-    Intent intent = new Intent(OtpActivity.this,MainActivity.class);
-    startActivity(intent);
-    finishAfterTransition();
+    database.getReference("/Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if (dataSnapshot.exists()){
+                Intent intent = new Intent(OtpActivity.this,MainActivity.class);
+                startActivity(intent);
+                finishAfterTransition();
+            }
+            else {
+                Intent intent = new Intent(OtpActivity.this,GatherDetails.class);
+                startActivity(intent);
+                finishAfterTransition();
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
+
 }
     }
 
