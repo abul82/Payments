@@ -1,9 +1,11 @@
 package com.demo.payments;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,12 +17,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 private FirebaseAuth mAuth;
 private FirebaseUser firebaseUser;
 EditText emailET,pwdET;
 Button loginBtn;
+
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,19 +38,24 @@ Button loginBtn;
         emailET = findViewById(R.id.email_et);
         pwdET = findViewById(R.id.pwd_et);
         loginBtn = findViewById(R.id.login_btn);
-
+        database = FirebaseDatabase.getInstance();
         loginBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
+                String phn_num = emailET.getText().toString().trim();
+                finishAfterTransition();
+                Intent intent = new Intent(LoginActivity.this,OtpActivity.class);
+                intent.putExtra("phn_num", phn_num);
+                startActivity(intent);
 
-                String email = emailET.getText().toString().trim();
-                String pwd = pwdET.getText().toString().trim();
-                if (loginBtn.getText() == "Login"){
-                    signIN(email,pwd);
-                }
-                else {
-                    newUser(email,pwd);
-                }
+//                String pwd = pwdET.getText().toString().trim();
+//                if (loginBtn.getText() == "Login"){
+//                    signIN(email,pwd);
+//                }
+//                else {
+//                    newUser(email,pwd);
+//                }
             }
         });
     }
@@ -87,11 +100,22 @@ Button loginBtn;
     }
 
     private void UI(FirebaseUser user) {
-        if (user == null ){
-            loginBtn.setText("Create User");
-        }
-        else {
-            loginBtn.setText("Login");
+        if (user != null){
+        database.getReference("/Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String tempUID = dataSnapshot.getKey();
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finishAfterTransition();
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         }
     }
 }
