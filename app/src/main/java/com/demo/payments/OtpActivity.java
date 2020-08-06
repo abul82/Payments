@@ -91,7 +91,7 @@ public class OtpActivity extends AppCompatActivity implements PhoneCallbacksList
 
     @Override
     public void onVerificationFailed(String message) {
-        Toast.makeText(this,"Number Verification Failed",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Number Verification Failed"+message,Toast.LENGTH_SHORT).show();
     }
 
     @Override

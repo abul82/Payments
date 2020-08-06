@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Blood Donation"
+                android:text="Register Yourself"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="30dp"
                 android:textSize="35dp"

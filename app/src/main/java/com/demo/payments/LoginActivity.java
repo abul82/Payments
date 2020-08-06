@@ -49,73 +49,7 @@ Button loginBtn;
                 intent.putExtra("phn_num", phn_num);
                 startActivity(intent);
 
-//                String pwd = pwdET.getText().toString().trim();
-//                if (loginBtn.getText() == "Login"){
-//                    signIN(email,pwd);
-//                }
-//                else {
-//                    newUser(email,pwd);
-//                }
             }
         });
-    }
-
-    private void newUser(String email, String pwd) {
-        mAuth.createUserWithEmailAndPassword(email,pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Log.d("Login","Error"+task);
-                }
-            }
-        });
-    }
-
-    private void signIN(String email, String pwd) {
-        mAuth.signInWithEmailAndPassword(email,pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else {
-                    Log.d("Login","Error"+task);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseUser = mAuth.getCurrentUser();
-        UI(firebaseUser);
-    }
-
-    private void UI(FirebaseUser user) {
-        if (user != null){
-        database.getReference("/Users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String tempUID = dataSnapshot.getKey();
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finishAfterTransition();
-                }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        }
     }
 }
